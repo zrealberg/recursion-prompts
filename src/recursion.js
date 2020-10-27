@@ -7,31 +7,148 @@
 // Example: 5! = 5 x 4 x 3 x 2 x 1 = 120
 // factorial(5); // 120
 var factorial = function(n) {
+  if (n < 0) {
+    return null;
+  } else if (n === 1 || n === 0) {
+    return 1;
+  } else if (n === 2) {
+    return n;
+  } else if (n > 2) {
+    return factorial(n - 1) * n;
+  }
 };
 
 // 2. Compute the sum of an array of integers.
 // sum([1,2,3,4,5,6]); // 21
 var sum = function(array) {
+
+  var copy = array.slice(0);
+  if (copy.length === 0) {
+    return 0;
+  } else if (copy.length === 1) {
+    return copy[0];
+  } else {
+    copy[0] = copy[0] + copy[copy.length - 1 ];
+    copy.pop();
+    return sum(copy);
+  }
 };
 
 // 3. Sum all numbers in an array containing nested arrays.
 // arraySum([1,[2,3],[[4]],5]); // 15
 var arraySum = function(array) {
+  // if (typeof array === 'array') {
+
+  if (array.length === 0) {
+    return 0;
+  }
+  var copy = array.slice(0);
+  // } else {
+  //   copy = array;
+  // }
+
+  //base case - array has one, integer (not an array) value
+  if (copy.length === 1 && typeof copy[0] === 'number' && Array.isArray(copy)) {
+    // console.log('case 1');
+    return copy[0];
+    //recursive case 1 - array has one value, but its an array
+  } else if (copy.length === 1 && Array.isArray(copy)) {
+    // console.log('case 2');
+    return arraySum(copy[0]);
+  } else {
+    // console.log('case 3');
+    // console.log('before reform', copy);
+    //check if first val is number
+    if (typeof copy[0] === 'number') {
+      //if so, store that value as 'first'
+      var first = copy[0];
+    } else {
+      //if not, call func recursively to pull out number
+      // console.log('recursive call on first value in array');
+      // console.log('first val', copy[0]);
+      var first = arraySum(copy[0]);
+    }
+    //check if last val is number
+    if (typeof copy[copy.length - 1 ] === 'number') {
+      //if so, store that value as 'first'
+      var last = copy[copy.length - 1 ];
+    } else {
+      //if not, call func recursively to pull out number
+      // console.log('recursive call on last value in array');
+      var last = arraySum(copy[copy.length - 1]);
+    }
+    // var first = arraySum(copy[0]);
+    // var last = arraySum(copy[copy.length - 1 ]);
+    copy[0] = first + last;
+    copy.pop();
+    // console.log('after reform', copy);
+    return arraySum(copy);
+  }
 };
 
 // 4. Check if a number is even.
 var isEven = function(n) {
+  if (n < 0) {
+    n = n * -1;
+  }
+  if (n === 2) {
+    return true
+  } else if (n === 1) {
+    return false
+  } else {
+    return isEven(n-2);
+  }
 };
 
 // 5. Sum all integers below a given integer.
 // sumBelow(10); // 45
 // sumBelow(7); // 21
 var sumBelow = function(n) {
+  if (n < 0) {
+    return -1 * (sumBelow (n * -1));
+  }
+  if (n === 1 || n === 0) {
+    return 0;
+  } else if (n === 2) {
+    return 1;
+  } else {
+    return sumBelow(n - 1) + n - 1;
+  }
 };
 
 // 6. Get the integers within a range (x, y).
-// range(2,9); // [3,4,5,6,7,8]
+// range(2,5); // [3,4,5,6,7,8]
 var range = function(x, y) {
+  // if (y < x) {
+  //   range(y, x);
+  // }
+  if (y > x || y === x) {
+    var diff = y - x;
+    var result = [];
+    if (diff === 0 || diff === 1) {
+      return result;
+    } else if (diff === 2) {
+      result.push(x+1);
+      return result;
+    } else {
+      result = [x+1].concat(range(x+1, y));
+      return result;
+    }
+  } else {
+    // range(5,2) => [4, 3]
+    var diff = x - y;
+    var result = [];
+    if (diff === 0 || diff === 1) {
+      return result;
+    } else if (diff === 2) {
+      result.push(x-1);
+      return result;
+    } else {
+      result = [x-1].concat(range(x-1, y));
+      return result;
+    }
+  }
+
 };
 
 // 7. Compute the exponent of a number.
@@ -40,6 +157,21 @@ var range = function(x, y) {
 // exponent(4,3); // 64
 // https://www.khanacademy.org/computing/computer-science/algorithms/recursive-algorithms/a/computing-powers-of-a-number
 var exponent = function(base, exp) {
+
+  if (exp >= 0) {
+    if (exp === 0) {
+      return 1;
+    } else if (exp === 1) {
+      return base;
+    } else {
+      result = base * exponent(base, exp - 1);
+      return result;
+    }
+  } else {
+    return ( 1 / exponent(base, (exp * -1)));
+  }
+
+
 };
 
 // 8. Determine if a number is a power of two.
